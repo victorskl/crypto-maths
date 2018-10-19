@@ -1,0 +1,416 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+\usepackage{hyperref}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{mathpazo}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\Z}{\mathbb{Z}}
+
+\setlength{\parindent}{0pt}
+
+% verbatim grey start
+\usepackage{fancyvrb,newverbs,xcolor}
+\definecolor{cverbbg}{gray}{0.95}
+\newenvironment{cverbatim}
+ {\SaveVerbatim{cverb}}
+ {\endSaveVerbatim
+  \flushleft\fboxrule=0pt\fboxsep=.5em
+  \colorbox{cverbbg}{\BUseVerbatim{cverb}}%
+  \endflushleft
+}
+\newenvironment{lcverbatim}
+ {\SaveVerbatim{cverb}}
+ {\endSaveVerbatim
+  \flushleft\fboxrule=0pt\fboxsep=.5em
+  \colorbox{cverbbg}{%
+    \makebox[\dimexpr\linewidth-2\fboxsep][l]{\BUseVerbatim{cverb}}%
+  }
+  \endflushleft
+}
+
+\newcommand{\ctexttt}[1]{\colorbox{cverbbg}{\texttt{#1}}}
+\newverbcommand{\cverb}
+  {\setbox\verbbox\hbox\bgroup}
+  {\egroup\colorbox{cverbbg}{\box\verbbox}}
+% verbatim grey end
+
+
+\title{Crypto Maths}
+\author{San Kho Lin}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Divisibility}
+
+An integer $a$ is said to be divisible by a positive integer $b$ and this is written as $b|a$ (i.e. $b$ divides $a$), if $a = bc$ for a third integer $c$ and $c \neq 0$.
+
+\begin{enumerate}
+\item $a|a$
+\item $a|1$ then $a = \pm b$
+\item $a|b$ and $b|c$ then $a|c$
+\item $a|b$ and $b|a$ then $a = \pm b$
+\item $a|b$ and $a|c$ then $a|(bx + cy)$ for some integers $x, y$
+\item $a|b$ then $ca|cb$ for any $c$
+\end{enumerate}
+
+\textbf{Proof (5)}: $a|b$ and $a|c$ then $a|(bx + cy)$ for some integers $x, y$
+\begin{itemize}
+\item Since $a|b$ we have $b = ma$ for some integer m.
+\item Similarly, $a|c$ we have $c = na$ for some integer n.
+\item Now consider, $bx + cy = ma.x + na.y = a (mx + ny)$
+\item Therefore, $a|(bx + cy)$ 
+\end{itemize}
+
+
+\subsection{Division Algorithm}
+
+$a = qn + r$  whereas $0 \leq r < n$ and $q = \floor*{a/n}$
+
+\begin{itemize}
+\item a = dividend
+\item n = divisor (modulus)
+\item q = quotient
+\item r = remainder (simplest remainder is known as \textit{residue})
+\end{itemize}
+
+\section{Prime}
+
+\subsection{Relatively Prime and Co-prime}
+
+\textit{\textbf{Relatively Prime} and \textbf{Co-Prime} are the same.. \footnote{\url{https://en.wikipedia.org/wiki/Coprime_integers}} }
+\\
+\\
+Two numbers are relatively prime if they have no prime factors in common; that is, their only common divisor is 1. This is equivalent to saying that two numbers are relatively prime if their $\gcd(a, b) = 1$.
+
+
+
+finite field
+set
+
+
+prime
+twin-prime
+co-prime
+semi-prime
+
+composite numbers
+
+
+\section{Euclidean Algorithm}
+
+\textit{Euclidean Algorithm} find \textbf{Greatest Common Divisor} (GCD) of two positive integers. The greatest common divisor of $a$ and $b$ is the largest integer that divides both $a$ and $b$.
+
+\begin{itemize}
+\item $gcd(a, b) = max[k]$, such that $k|a$ and $k|b$
+\item $gcd(0, 0) = 0$
+\item $gcd(a, 0) = a$
+\item If $gcd(a, b) = 1$, then $a$ and $b$ are relatively prime
+\end{itemize}
+
+Assume $a \geq b > 0$. Find $gcd(a, b)$ by applying \textit{Division Algorithm} iteratively deducing such that:
+\begin{align*}
+a = q_1 b + r_1 \\
+b = q_2 r_1 + r_2 \\
+r_1 = q_3 r_2 + r_3 \\
+. \\
+. \\
+r_{n-2} = q_n r_{n-1} + r_n \\
+r_{n-1} = q_{n+1} r_n + 0
+\end{align*}
+
+Therefore, $d = gcd(a, b) = r_n$.
+
+$d = gcd(r_{i}, r_{i+1})$
+
+$r_{i-2} = q_{i} r_{i-1} + r_{i}$
+
+\begin{lcverbatim}
+Euclid(a,b);
+X:=a; y:=b;
+while y > 0 do {
+  r = x mod y;
+  x:=y;
+  y:=r; }
+return(x);
+\end{lcverbatim}
+
+\subsection{Extended Euclidean Algorithm}
+
+XGCD
+
+
+\section{Modular Arithmetic}
+
+From \textit{Division Algorithm}, we can rewrite $a = \floor{a/n} \times n + (a \mod n)$. Therefore, we can rewrite remainder as $r = a \mod n$. We call $r$ is the remainder modulo $n$.
+
+\subsection{Binary Operations}
+
+The rules for ordinary arithmetic involving addition, subtraction, and multiplication carry over into modular arithmetic.
+
+\begin{itemize}
+\item $[(a \mod n) + (b \mod n)] \mod n = (a + b) \mod n$
+\item $[(a \mod n) - (b \mod n)] \mod n = (a - b) \mod n$
+\item $[(a \mod n) \times (b \mod n)] \mod n = (a \times b) \mod n$
+\end{itemize}
+
+\textbf{Exponentiation} is performed by repeated multiplication, as in ordinary arithmetic. Technique known as \textbf{Repeated Squaring and Multiplying Algorithm}, but work for smaller exponent. 
+\\
+Recall:
+\begin{align*}
+(x^a)^2 = x^{2a} \\
+x^{a+b} = x^{a}  x^{b}
+\end{align*}
+
+
+\subsection{Congruence}
+
+\textit{...Two numbers are congruent if they are equal to the same thing in mod something...}
+\\
+\\
+Two integers $a$ and $b$ are said to be congruent modulo $n$, if $(a \mod n) = (b \mod n)$ and, can be written as $a \equiv b \pmod{n}$.
+
+\begin{enumerate}
+\item $a \equiv b \pmod{n}$ if $n|(a - b)$
+\item $a \equiv b \pmod{n}$ implies $b \equiv a \pmod{n}$
+\item $a \equiv b \pmod{n}$ and $b \equiv c \pmod{n}$ imply $a \equiv c \pmod{n}$ 
+\end{enumerate}
+
+If $a \equiv b \pmod{n}$ and $c \equiv d \pmod{n}$ for some integers $a,b,c,d,n$
+
+\begin{enumerate}
+\item $a \pm c \equiv b \pm d \pmod{n}$ -- remainder of sum = sum of remainder
+\item $ma \equiv mb \pmod{n}$ -- remainder of multiple = multiple of remainder
+\item $ac \equiv bd \pmod{n}$ -- remainder of product = product of remainder
+\end{enumerate}
+
+
+Note on expression:
+\begin{itemize}
+\item express as \textbf{binary operator} that produces a remainder: $a \mod n$
+\item express as \textbf{congruence relation} that shows the equivalence of two integers: $a \equiv b \pmod{n}$
+\end{itemize}
+
+Notation:
+
+\begin{align*}
+5 \equiv 3 \pmod{3} \\
+5 \mod 3 = 2 \mod 3
+\end{align*}
+
+\subsection{Inverse}
+
+\textbf{Additive Inverse} = Subtraction
+
+$a - b = a + (-b)$ because $b + (-b) = 0$
+
+$(-b)$ in modulo $m$ is just $(m - b)$.
+\\
+\\
+\textbf{Multiplicative Inverses} (and hence Division) are numbers such that when you multiply by multiplicative inverses you get back multiplicative identity, which is 1. We never have multiplicative inverse for 0 i.e. any number times zero will always get 0. 1 will always have multiplicative inverse i.e. $1^{-1} = 1$, but not 2 as $2^{-1} = \frac{1}{2}$ in ordinary arithmetic. But in modular arithmetic, multiplicative inverses exists sometimes... in such that inverse of $a$ exists modulo $m$ wherever $a$ and $m$ have no factor in common. We say this, in terms of \textit{Euclidean Algorithm}:
+\\
+\\
+$a^{-1} \mod m$ exists when $gcd(a, m) = 1$
+\\
+\\
+In other word, the multiplicative inverse of $a \mod m$ is the integer $b$ such that $ab = 1 \mod m$, write $b = a^{-1} \mod m$. 
+
+
+\section{Euler Totient Function}
+
+For $n \geq 1$, let $\phi{(n)}$ denote the number of integers less than $n$ but are relatively prime to $n$.
+\\
+\\
+$\phi{(n)} = $ count the number of integers between 1 and $n$ whose $\gcd$ with $n$ is 1.
+
+\[ \phi{(n)} = |\{x:1 \leq x \leq n, \gcd(x, n) = 1\}| \]
+
+Example: $\phi{(6)} = 2$
+\begin{align*}
+\gcd(1, 6) = 1 \\
+\gcd(2, 6) = 2 \\
+\gcd(3, 6) = 3 \\
+\gcd(4, 6) = 2 \\
+\gcd(5, 6) = 1
+\end{align*}
+
+Then, $R = \{1, 5\}$. Hence, $\phi{(6) = 2}$.
+\\
+\\
+\textbf{Fact 1:} $\phi{(p)} = p - 1$ \quad for any prime $p$. \\
+\textbf{Fact 2:} $\phi{(p)} = p^a - p^{a - 1} = p^{a - 1} (p - 1)$ \quad for any prime $p$ and any integer $a \geq 1 $. \\
+\textbf{Fact 3:} $\phi{(pq)} = (p - 1) (q - 1)$ \quad for any pair of primes $p$ and $q$. \\
+\textbf{Fact 4:} $\phi{(ab)} = \phi{(a)} \times \phi{(b)}$ \quad if $a$ and $b$ are relatively prime numbers i.e. $\gcd(a, b) = 1$. \\
+\\
+Notes: 
+\begin{itemize}
+\item Fact 1 to 3 deal with primes. 
+\item Fact 4 is used when any two integers are co-prime.
+\item And use the first form in Fact 2 which is easier to track! $2^3 - 2^{2}$
+\end{itemize}
+
+
+
+\section{Fermat's Little Theorem}
+
+If \footnote{In other word: \textit{if  $a$ and $p$ are coprime}} $p$ is prime and $a$ is a positive integer not divisible by $p$ , then
+
+\begin{align}
+a^{p-1} \equiv 1 \pmod{p}
+\end{align}
+
+If $p$ is prime and $a$ is a positive integer, then
+
+\begin{align}
+\label{fermat2}
+a^{p} \equiv a \pmod{p}
+\end{align}
+
+
+\section{Euler's Theorem}
+
+For every $a$ and $n$ that are relatively prime (i.e. coprime), then
+
+\begin{align}
+a^{\phi{(n)}} \equiv 1 \pmod{n}
+\end{align}
+
+Alternate form: when $a$ does not need to be relatively prime to $n$, then
+
+\begin{align}
+a^{\phi{(n)+1}} \equiv a \pmod{n}
+\end{align}
+
+
+\section{Trick}
+
+When $a$ is one less than $p$.
+\begin{align*}
+8^{100} \mod 9 \\
+8 \mod 9 = (-1) \mod 9 \\
+(-1)^{100} \mod 9 \\
+1 \mod 9
+\end{align*}
+
+When $a$ power is equal to modulo $p$ then answer is just $a$. This is because Fermat's Eq \eqref{fermat2}.
+\\
+$3 \equiv 3^{17} \pmod{17}$
+\\
+\\
+Fremat's Lil' Theorem can be used only when modulo $p$ is prime. Otherwise use Euler's Theorem which is more generalized i.e. modulo $n$ does not need to be prime.
+\\
+\\
+Find remainder when $999998 \times 99994$ is divided by 9. In modular group, if a number is divisible means modulo is zero. i.e. $999999 \div 9 = 111111; r = 0$
+
+\begin{align*}
+999998 \times 99994 \\
+= (999999 - 1) \times (99994 - 5) \\
+\equiv (0 - 1) \times (0 - 5) \pmod{9} \\
+\equiv 5 \pmod{9}
+\end{align*}
+
+
+\section{Chinese Remainder Theorem}
+
+CRT
+
+\newpage
+
+\section{Polynomial}
+
+\begin{itemize}
+\item poly = many, nomial = terms
+\item a term may have: coefficient, variable and non-negative integer exponent: $Ax^n$
+\item monomial: $6$, which is also $6x^0$ and, $\pi b^5$, $10z^{15}$ -- one term
+\item binomial: $1x^2 + 1$ -- two terms, here $1$ is known as \emph{constant term} whereas $x^2$ is \emph{variable term}.
+\item trinomial: $4x^3 + 2x^2 + 7$, $7y^2 - 3y + \pi$ -- three terms
+\item polynomial: $10x^7 - 9x^2 + 15x^3 + 9$, can be also written as $10x^7 - 9x^2 + 15x^3 + 9x^0$
+\item not a polynomial: $x^{-\frac{1}{2}}+1$, $9a^{\frac{1}{2}}-5$ ($\frac{1}{2}$ is fraction, not integer), $9\sqrt{a} - 5$, $9a^a - 5$ (exponent $a$ is variable, not integer)
+\item polynomial is the sum of finite number of terms
+\item have a notion of \textbf{Degree} such that what is the degree of a given polynomial or what is the degree of a give term of polynomial? -- Degree is the power that variable is risen to... i.e. exponent of a term. The highest degree of a give polynomial is the highest exponent of given terms in a polynomial. e.g. $10x^7 - 9x^2 + 15x^3 + 9$ degree is 7 -- $7^{th}$ degree polynomial. $x^2 + 1$ is $2^{nd}$ degree binomial. $4x^3 + 2x^2 + 7$ is $3^{rd}$ degree trinomial.
+\item have a notion of \textbf{Standard Form} which is sorted by keeping highest to lowest exponent order and, have a notion of \textbf{Leading Term} that is, a term at first position...
+\end{itemize}
+
+
+
+\newpage
+
+\section{Abstract Algebra}
+
+Abstract concept
+
+\subsection{Set}
+
+\begin{itemize}
+\item A set is a collection of objects. 
+\item These objects are referred to as elements of the set.
+\end{itemize}
+
+
+\subsection{Group}
+
+\begin{itemize}
+\item Set of elements : $G = \{a,b,c\}$ (OR) $a, b, c \in G$
+\item Group has binary operations : $+, \times$
+\item Closed under operation : Closure -- integer times integer get another integer
+\item Identity $e$ in such that: $a \times e = e \times a = a$
+\item Identity $e$ in such that: $a + e = a$
+\item Inverse : $a^{-1}$ exists for all $a \in G$ such that $a \times a^{-1} = e$
+\item Inverse : $-a$ exists for all $a \in G$ such that $a + (-a) = e$
+\item Associative : $(a \times b) \times c = a \times (b \times c)$
+\item Commutative : group is not required to be commutative i.e. possible for $a \times b \neq b \times a$. However, if a group is commutative, it is called \textit{Commutative Group} or \textbf{Abelian Group}. Otherwise, it is called \textit{Non-commutative Group}.
+\end{itemize}
+
+
+\subsection{Cyclic Group}
+
+\begin{itemize}
+\item A group $G$ is \textbf{cyclic} group, if it is generated by \textbf{a single element}, $G = \langle x \rangle$.
+\item If $G = \langle x \rangle$ for some $x$, then we call $G$ a cyclic group.
+\item e.g. a cyclic group generated by $x$ with operation $\times$, then smallest subgroup of $G$ containing $x$ is: \quad $\langle x \rangle = \{ \dots , x^{-1}, 1, x, x^2, x^3, \dots \}$.
+\item Let $H$ be a group with operation $+$, pick $y \in H$, then group generated by $y$ = smallest subgroup of $H$ containing $y$, such that $\langle y \rangle = \{ \dots , -2y, -y, 0, y, 2y, \dots \}$. If $H = \langle y \rangle$ for some $y$, then we call $H$ a cyclic group.
+\item Example: Group of integers $\Z$  under $+$, claim that $\Z = \langle 1 \rangle$. Then, $\langle 1 \rangle = \{ \dots, -2, -1, 0, 1, 2, \dots \}$. This covers all the integers, hence, $\Z$ is a cyclic group. It is an example of \textbf{Infinite Cyclic Group}.
+\item \textbf{Finite Cyclic Group} is such that $G$ = Integers mod $n$ under addition. Then, all possible elements are $G = \{0, 1, 2, \dots, n-1\}$. Integers mod $n$ is written like this: $\Z /n \Z$.
+\end{itemize}
+
+
+\subsection{Ring}
+
+
+
+
+\subsection{Polynomial Ring}
+
+
+
+
+\subsection{Field}
+
+\textit{... Every Field is a Ring. But not every Ring is a Field.}
+\\
+\\
+$Z_p = \{0,1,...,p-1\}$
+
+set of reminders obtained by 
+
+$Z = (Z_p,+) (Z_p,*)$
+
+$0$ = identity in addition
+
+$(Zp^*,*)$ = identity in multiplication
+
+
+
+
+
+
+
+
+
+\end{document}
